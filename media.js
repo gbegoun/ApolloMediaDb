@@ -1,5 +1,7 @@
-import {getFabricPrintInstructionIdentifierByName, sendRequest} from "./service.js";
+import {getFabricPrintInstructionIdentifierByName, sendRequest, getMediaBlankByName} from "./service.js";
 import { ids } from "./ids.js";
+
+let logId=""
 
 export class Media {
     static getFabricPrintInstructionIdentifierByName = getFabricPrintInstructionIdentifierByName
@@ -19,7 +21,7 @@ export class Media {
 
     async create(data){
         try {
-
+            logId = data["media name"]
             this.data = data;
             WriteToLog(`>`,"new-line");
             WriteToLog(`[${data["#"]}] ${data["media name"]}`,"header",data["#"]);
@@ -59,8 +61,7 @@ export class Media {
     }
 
     generateLoadingInstruction(side) {
-        WriteToLog(" │  ├───> Generating Loading Instructions" , this.data[`loading instruction ${side}`]);
-
+        WriteToLog(" │  ├───> Generating Loading Instructions " + this.data[`loading instruction ${side}`]);
         const name = this.data[`loading instruction ${side}`];
         const stroke = this.data[`stroke ${side}`];
         const span = this.data[`gripper span ${side}`];
@@ -136,15 +137,21 @@ export class Media {
 
     async addToDB() {
         try {
+            // const media = getMediaBlankByName(this.mediaBlank.mediaName)
+            // if (media)
+            // {
+            //     console.log("************* media exists")
+            // }
+
             WriteToLog(` ├─┬─> Adding Media ${this.mediaBlank.mediaName} - SKU: ${this.mediaBlank.sku}`);
     
             if (!this.checkMedia()) {
                 return false
             }
-            
+
             let respsonse = await this.mediaBlank.addToDb();
             let responseJson = await respsonse.json()
-            
+
             if (respsonse.status !== 200) {
                 WriteToLog(" │   ├> Failed to add media blank", "error");
                 WriteToLog(` │   └> ${responseJson.validationErrors.join(" / ")}`, "error");
@@ -152,8 +159,9 @@ export class Media {
                 return false
             }
             WriteToLog(" │   └> Media Blank Added Succesfully")
-
             const data = {mediaBlanks:responseJson.mediaBlanks}
+            console.log(data)
+
             respsonse = await this.mediaBlank.updatePrintAreas(data, this.mediaInstructionsMain.pallet);
             if (respsonse.status !== 200) {
                 WriteToLog(" │   ├> Failed to update print area", "error");
@@ -208,7 +216,7 @@ export class Media {
             }
             WriteToLog(` │   └> Media Instructions Back Added Succesfully - ${this.mediaInstructionsBack.guid}`);
 
-            WriteToLog(` └────> Finishing Adding Media - ${this.mediaBlank.mediaName}`);
+            WriteToLog(` └────> Finishing Adding Media - ${this.mediaBlank.mediaName}`,"success");
             return true;
 
         } catch (error) {
@@ -229,12 +237,12 @@ class Instruction {
             const url = localStorage.getItem("ServerURL")
             const fullUrl = url + this.api_url;
             const data = await this.toJson();
-            const respsonse = await sendRequest(data, fullUrl);
-            
+            const respsonse = await sendRequest(data, this.api_url);
             return respsonse;
         }
         catch (err){
-            WriteToLog(err)
+            console.error(err)
+            WriteToLog(err,"error")
         }
     }
 
@@ -271,7 +279,7 @@ class MediaBlank extends Instruction {
         const url = localStorage.getItem("ServerURL")
         data["mediaBlanks"][0]["printAreas"][0] = { ...data["mediaBlanks"][0]["printAreas"][0], ...pallet };
         data["mediaBlanks"][0]["printAreas"][2] = { ...data["mediaBlanks"][0]["printAreas"][2], ...pallet };
-        return sendRequest(data, url + this.api_url_update);
+        return sendRequest(data, this.api_url_update);
     }
 
     print(prefix = "") {
@@ -429,16 +437,20 @@ class MediaInstructions extends Instruction {
 
 }
 
-function WriteToLog(text, level = null, id = null) {
-    const elLog = document.querySelector(".log-container");
-    const newLine = document.createElement("div");
-    newLine.classList.add("line");
-    if (level) {
-        newLine.classList.add(level);
-    }
-    if (id) {
-        newLine.setAttribute("id", "id" + id); // Set as an `id`, not a class
-    }
-    newLine.innerHTML = text;
-    elLog.appendChild(newLine);
+
+function WriteToLog(message, level = null, id = null) {
+
+    // const newLine = document.createElement("div");
+    
+    // newLine.classList.add("line");
+
+    // if (level) {
+    //     newLine.classList.add(level);
+    // }
+    // if (id) {
+    //     newLine.setAttribute("id", "id" + id); 
+    // }
+    // newLine.innerHTML = text;
+    
+    window.dispatchEvent(new CustomEvent("externalData", {detail: {logId, message, level, id} }));
 }

@@ -1,20 +1,17 @@
 import { Media } from "./media.js";
+import { useLogger } from "./cmps/LoggerProvider.jsx"
 
-document.querySelector(".fileInput").addEventListener("change", readExcel);
-document.getElementById("insert-button").addEventListener("click", insertToDb);
 
-localStorage.removeItem("Medias")
-localStorage.removeItem("FabricPrintInstructionList")
-GetFabricPrintInstructionList()
-localStorage.setItem("ServerURL","http://10.90.6.100:55559")
 
-async function insertToDb(){
+export async function uploadToDb(){
 
     const medias = JSON.parse(localStorage.getItem("Medias"))
     for (const media of medias){
         await addMediaToDB(media)
     }
 }
+
+
 
 async function addMediaToDB(mediaData){
     try{
@@ -35,8 +32,13 @@ async function addMediaToDB(mediaData){
     }
 }
 
-function readExcel(event) {
-    
+function sendToLog(logId, text) {
+    window.dispatchEvent(new CustomEvent("externalData", { detail: {logId:logId, text:text} }));
+}
+
+
+export function readExcel(event) {
+
     const file = event.target.files[0];
 
     if (!file) return;
@@ -78,8 +80,8 @@ function readExcel(event) {
         }
 
         // Display JSON data
-        // document.getElementById("excelTable").textContent = JSON.stringify(jsonData, null, 2);
-        localStorage.setItem("Medias", JSON.stringify(jsonData));
+        const filtered = jsonData.filter((item)=>item["media name"]!==null)
+        localStorage.setItem("Medias", JSON.stringify(filtered));
         writeTable();
     };
 
@@ -123,12 +125,11 @@ function writeTable() {
     });
 }
 
-
-async function GetFabricPrintInstructionList() {
+export async function GetFabricPrintInstructionList() {
     console.log("Getting Fabric Print Instructions");
 
     try {
-        const response = await fetch("http://bd-simulator09:55559/api/v1/FabricPrintInstruction/GetFabricPrintInstructionList", {
+        const response = await fetch(localStorage.getItem("ServerURL") + "/api/v1/FabricPrintInstruction/GetFabricPrintInstructionList", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ criteria: {} })
