@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Excel Reader</title>
+</head>
+<body>
+    <h2>Excel To MediaDb</h2>
+    <section class="file-dialog">
+
+    <input type="file" class="fileInput" name="123"/>
+    </section>
+    <section class="buttons">
+        <button id="insert-button">Add To Database</button>
+    </section>
+
+    <section class="media-list">
+        <table class="table", id="excelTable"></table>    
+    </section>
+
+    <section class="log-container">
+    </section>
+    
+
+    <!-- Include XLSX.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>

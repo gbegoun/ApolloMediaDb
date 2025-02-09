@@ -1,0 +1,28 @@
+{
+    "mediaPrintInstructions": {
+        "mediaPrintInstructionsIdentifier": {
+            "identificationName": "Gal Media Test 8",
+			"id": "D5606571-4C5C-41DB-89B1-035336ECCBD9"
+        },
+        "mediaBlankIdentifier": {
+            "id": "D5606571-4C5C-41DB-89B1-035336ECCBD9"
+        },
+        "defaultFabricPrintInstructionIdentifier": {
+            "externalId": null,
+            "id": "fe01120b-4ee3-fc45-b293-1fbdc7471858",
+            "identificationName": "Apollo Color STD"
+        },
+        "defaultLoadingInstructionIdentifier": {
+            "id": "4A709289-58F6-45AF-B6B1-CC6878F2BA30"
+        },
+        "instructionsPerPrintAreas": [],
+        "supportedSurfacesTypes": [
+            {
+                "surfaceTypeIdentifier": {
+                    "id": "6c820ed8-b3ec-4f18-b032-a778d2ebc3d4"
+                },
+                "surfaceLayoutName": "Standard"
+            }
+        ]
+    }
+}

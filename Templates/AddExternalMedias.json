@@ -1,0 +1,35 @@
+{
+    "mediaBlanks": [
+        {
+            "identifier": {
+				"id": "D5606571-4C5C-41DB-89B1-035336ECCBD9",
+                "identificationName": "GAL-TEST",
+                "sku": "GALSKU"
+            },
+            "name": "GAL-TEST",
+            "mediaType": {
+                "mediaTypeIdentifier": {
+                    "identificationName": "Short Pocket T"
+                }
+            },
+            "mediaSize": {
+                "width": 480,
+                "length": 810
+            },
+            "mediaProportion": {
+                "identifier": {
+                    "identificationName": "L"
+                },
+                "name": "Large"
+            },
+            "defaultFabric": {
+                "colorInfo": {
+                    "identifier": {
+                        "identificationName": "Red"
+                    }
+                }
+            },
+            "printAreas": []
+        }
+    ]
+}

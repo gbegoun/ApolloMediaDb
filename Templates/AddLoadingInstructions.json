@@ -1,0 +1,33 @@
+{
+    "loadingInstructions": {
+        "id": 0,
+        "identifier": {
+            "id": "D5B3E6BA-0B2E-48BA-9BE9-A97687C45358",
+            "identificationName": "Gal - Loading - 99"
+        },
+        "originLoadingInstructionsIdentifier": null,
+        "name": "Gal - Loading - 7",
+        "useLintRoller": true,
+        "span": 501,
+        "stroke": 801,
+        "autoLoaderEnabled": true,
+        "continuousEnabled": false,
+        "loadingInstructionsProperties": {},
+        "isFactoryCreated": false,
+        "loadingSequence": {
+            "identifier": {
+                "id": "f79d7afa-f713-4f9e-8a92-470453200dee",
+                "identificationName": "Flaps & Tension Relief"
+            },
+            "id": 1
+        },
+        "tensionRelief": {
+            "id": 1,
+            "identifier": {
+                "id": "6c384ccc-7c36-41c1-94bf-dae95940276c",
+                "identificationName": "Regular Relief"
+            },
+            "dateModified": null
+        }
+    }
+}
