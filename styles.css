@@ -1,8 +1,8 @@
-body{
+.main-layout{
     display: grid;
     grid-template-columns: 450px 1fr;
     grid-template-rows: auto auto auto 1fr;
-    height:100vh;
+    height:98dvh;
     gap: 10px;
     overflow: hidden
 }

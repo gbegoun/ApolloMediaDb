@@ -1,14 +1,11 @@
 import { Media } from "./media.js";
 
-document.querySelector(".fileInput").addEventListener("change", readExcel);
-document.getElementById("insert-button").addEventListener("click", insertToDb);
+// document.querySelector(".fileInput").addEventListener("change", readExcel);
+// document.getElementById("insert-button").addEventListener("click", insertToDb);
 
-localStorage.removeItem("Medias")
-localStorage.removeItem("FabricPrintInstructionList")
-GetFabricPrintInstructionList()
-localStorage.setItem("ServerURL","http://10.90.6.100:55559")
 
-async function insertToDb(){
+
+export async function uploadToDb(){
 
     const medias = JSON.parse(localStorage.getItem("Medias"))
     for (const media of medias){
@@ -35,8 +32,8 @@ async function addMediaToDB(mediaData){
     }
 }
 
-function readExcel(event) {
-    
+export function readExcel(event) {
+    console.log("123")
     const file = event.target.files[0];
 
     if (!file) return;
@@ -87,6 +84,7 @@ function readExcel(event) {
 }
 
 function writeTable() {
+    console.log("123")
     const jsonData = JSON.parse(localStorage.getItem("Medias"));
 
     let table = document.getElementById("excelTable");
@@ -123,8 +121,7 @@ function writeTable() {
     });
 }
 
-
-async function GetFabricPrintInstructionList() {
+export async function GetFabricPrintInstructionList() {
     console.log("Getting Fabric Print Instructions");
 
     try {

@@ -2,7 +2,8 @@
 export function getFabricPrintInstructionIdentifierByName(name){
     const fabricPrintInstructions = getPrintInstructions()
     const instruction = fabricPrintInstructions.find(instr => instr.identifier.identificationName === name);
-    return instruction?.instruction.identifier ?? null
+    return instruction && instruction.instruction ? instruction.instruction.identifier : null;
+
 }
 
 export function getPrintInstructions(){
