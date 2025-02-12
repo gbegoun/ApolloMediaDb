@@ -456,7 +456,5 @@ function WriteToLog(message, level = null, id = null) {
     //     newLine.setAttribute("id", "id" + id); 
     // }
     // newLine.innerHTML = text;
-    
-    console.log("WriteToLog", message)
     window.dispatchEvent(new CustomEvent("externalData", {detail: {logId, message, level, id} }));
 }

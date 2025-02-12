@@ -12,6 +12,7 @@ export async function uploadToDb(){
 }
 
 
+
 async function addMediaToDB(mediaData){
     try{
         const media = new Media();
@@ -31,13 +32,14 @@ async function addMediaToDB(mediaData){
     }
 }
 
+
 function sendToLog(logId, text) {
     window.dispatchEvent(new CustomEvent("externalData", { detail: {logId:logId, text:text} }));
 }
 
 
-export function readExcel(event) {
 
+export function readExcel(event) {
     const file = event.target.files[0];
 
     if (!file) return;
@@ -88,6 +90,7 @@ export function readExcel(event) {
 }
 
 function writeTable() {
+    console.log("123")
     const jsonData = JSON.parse(localStorage.getItem("Medias"));
 
     let table = document.getElementById("excelTable");
