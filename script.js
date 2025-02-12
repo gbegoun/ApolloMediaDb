@@ -89,6 +89,7 @@ export function readExcel(event) {
 }
 
 function writeTable() {
+    console.log("123")
     const jsonData = JSON.parse(localStorage.getItem("Medias"));
 
     let table = document.getElementById("excelTable");
