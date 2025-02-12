@@ -22,6 +22,9 @@ export function App() {
 
         GetFabricPrintInstructionList()
 
+
+        GetFabricPrintInstructionList()
+
         
 
         const fileInput = document.querySelector(".fileInput");
