@@ -1,42 +1,41 @@
-const { createContext, useContext, useState,useEffect } = React
-
+const { createContext, useContext, useState, useEffect, useCallback } = React;
 
 // Create Context
 const LoggerContext = createContext();
 
 // Logger Provider (Manages All Logs)
 export function LoggerProvider({ children }) {
-
-    const [data, setData] = useState("")
+    const [data, setData] = useState([]); // Store logs as an array
     const [logs, setLogs] = useState({}); // Store logs as an object (key = logId)
 
-    useEffect (()=> {
+    useEffect(() => {
         function handleExternalData(event) {
-            setData(event.detail)
+            setData(prev => [...prev, event.detail]); // Append new logs (Functional update)
         }
         window.addEventListener("externalData", handleExternalData);
         return () => window.removeEventListener("externalData", handleExternalData);
-    },[])
+    }, []);
 
-    React.useEffect(() => {
-        if (data){
-            addLogLine(data.logId, data.message, data.level, data.id)
+    // Memoize `addLogLine` so it doesn't change on every render
+    const addLogLine = useCallback((logId, message, level = null, id = null) => {
+        setLogs((prevLogs) => ({
+            ...prevLogs,
+            [logId]: [...(prevLogs[logId] || []), { message, level, id }]
+        }));
+    }, []);
+
+    useEffect(() => {
+        if (data.length > 0) {
+            console.log("Processing logs:", data); // Debugging: Check if all logs are received
+
+            // Process ALL logs instead of just the latest one
+            data.forEach(log => {
+                addLogLine(log.logId, log.message, log.level, log.id);
+            });
+
+            setData([]); // Clear processed logs to prevent re-processing
         }
-        
-    }, [data]);
-
-    // Function to Add a Log Line to a Specific Log
-    const addLogLine = (logId, message, level=null, id=null) => {
-        setLogs((prevLogs) => {
-            const newLogEntry = {message,level,id}
-            return {
-                ...prevLogs,
-                [logId]: [...(prevLogs[logId] || []), newLogEntry] // Append to the selected log
-            }
-            
-        });
-    };
-
+    }, [data, addLogLine]); // ✅ Depend on `data` and `addLogLine`
 
     return (
         <LoggerContext.Provider value={{ logs, addLogLine }}>

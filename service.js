@@ -26,7 +26,7 @@ export async function sendRequest(data, endpoint) {
 
 
 export async function getMediaBlanks() {
-    console.log("Getting Fabric Print Instructions");
+    console.log("Getting Media Blanks");
 
     try {
         const response = await fetch(localStorage.getItem("ServerURL") + "/api/v1/MediaDb/GetMediaList", {

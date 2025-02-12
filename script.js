@@ -12,7 +12,6 @@ export async function uploadToDb(){
 }
 
 
-
 async function addMediaToDB(mediaData){
     try{
         const media = new Media();

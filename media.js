@@ -23,7 +23,7 @@ export class Media {
         try {
             logId = data["media name"]
             this.data = data;
-            WriteToLog(`>`,"new-line");
+            // WriteToLog(`>`,"new-line");
             WriteToLog(`[${data["#"]}] ${data["media name"]}`,"header",data["#"]);
             WriteToLog(` │  Generating Media`);
             
@@ -159,6 +159,7 @@ export class Media {
                 return false
             }
             WriteToLog(" │   └> Media Blank Added Succesfully")
+
             const data = {mediaBlanks:responseJson.mediaBlanks}
             console.log(data)
 
@@ -280,6 +281,10 @@ class MediaBlank extends Instruction {
         data["mediaBlanks"][0]["printAreas"][0] = { ...data["mediaBlanks"][0]["printAreas"][0], ...pallet };
         data["mediaBlanks"][0]["printAreas"][2] = { ...data["mediaBlanks"][0]["printAreas"][2], ...pallet };
         return sendRequest(data, this.api_url_update);
+    }
+
+    async update(){
+        
     }
 
     print(prefix = "") {
@@ -452,5 +457,6 @@ function WriteToLog(message, level = null, id = null) {
     // }
     // newLine.innerHTML = text;
     
+    console.log("WriteToLog", message)
     window.dispatchEvent(new CustomEvent("externalData", {detail: {logId, message, level, id} }));
 }

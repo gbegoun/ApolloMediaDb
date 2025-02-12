@@ -11,14 +11,15 @@ import {getMediaBlanks} from "./service.js"
 export function App() {
 
     const fileInput = document.querySelector(".fileInput");
+    GetFabricPrintInstructionList()
+    getMediaBlanks()
+
     
     useEffect(() => {
-        localStorage.setItem("ServerURL","http://9.163.232.97:55559")
+        localStorage.setItem("ServerURL","http://bd-simulator09:55559")
         localStorage.removeItem("Medias")
         localStorage.removeItem("FabricPrintInstructionList")
         
-        GetFabricPrintInstructionList()
-        getMediaBlanks()
         
 
         const fileInput = document.querySelector(".fileInput");
