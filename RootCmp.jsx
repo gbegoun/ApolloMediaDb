@@ -16,10 +16,12 @@ export function App() {
 
     
     useEffect(() => {
-        localStorage.setItem("ServerURL","http://bd-simulator09:55559")
+        localStorage.setItem("ServerURL","http://0.0.0.0:55559")
         localStorage.removeItem("Medias")
         localStorage.removeItem("FabricPrintInstructionList")
-        
+
+        GetFabricPrintInstructionList()
+
         
 
         const fileInput = document.querySelector(".fileInput");
