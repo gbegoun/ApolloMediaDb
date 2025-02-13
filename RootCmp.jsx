@@ -5,14 +5,14 @@ import { LoggerProvider } from "./cmps/LoggerProvider.jsx";
 import { LoggerDisplay } from "./cmps/LoggerDisplay.jsx";
 import { MediaList } from "./cmps/MediaList.jsx"
 
-import {readExcel, uploadToDb, GetFabricPrintInstructionList} from "./script.js"
+import {readExcel, uploadToDb, GetAllFabricPrintInstructions } from "./script.js"
 import {getMediaBlanks} from "./service.js"
 
 export function App() {
     const server_address = "http://bd-simulator09"
 
     const fileInput = document.querySelector(".fileInput");
-    GetFabricPrintInstructionList()
+    GetAllFabricPrintInstructions()
     getMediaBlanks()
     checkServerStatus()
 

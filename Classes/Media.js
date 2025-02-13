@@ -145,7 +145,7 @@ export class Media {
         }
         catch (err){
             WriteToLog("Unexpected Error, check logs", logId,"error");
-            console.log(err)
+            console.error(err)
             return false
         }
     }
@@ -248,7 +248,7 @@ class LoadingInstructions{
             }
         }
         catch (err){
-            WriteToLog(`   └> ${err.message,logId}`,"error")
+            WriteToLog(`   └> ${err.message}`,logId,"error")
         }
     }
 
@@ -269,7 +269,7 @@ class PrintInstructions {
             const name = data[`print instruction ${side}`]        
             WriteToLog(`   ├> Setting print instruction ${side} - ${name}`, logId)
             this.json = getFabricPrintInstructionsByName(name)
-    
+            
             if(this.json==null){    
                 const mediaColor = data.color.toLowerCase()
                 if (!mediaColor || mediaColor==="black" || mediaColor==="") {
@@ -279,22 +279,26 @@ class PrintInstructions {
                 } else {
                     this.json = getFabricPrintInstructionsByName("Apollo Color STD")
                 }
-                WriteToLog(`   │      └> Print Instructions ${name} not found, setting to ${this.json.identifier.identificationName}`, logId, "warning")
+                WriteToLog(`   │      └> Print Instructions ${name} not found, setting to ${this.json.fabricPrintInstructionsIdentifier.identificationName}`, logId, "warning")
             } else {
                 WriteToLog(`   │      └ Print Instructions ${name} found`, logId)
             }
         } 
         catch (err) {
-            WriteToLog(`   └> ${err.message,logId}`,"error")
+            //lkdsjflksdj
+            WriteToLog(`   └> ${err.message}`,logId,"error")
         }
     }
 
     getId(){
-        return this.json.identifier.id
+        return this.json.fabricPrintInstructionsIdentifier.id
     }
 
     getName(){
-        return this.json.identifier.identificationName
+        return this.json.fabricPrintInstructionsIdentifier.identificationName
+    }
+    getExternalId(){
+        return this.json.fabricPrintInstructionsIdentifier.externalId
     }
 }
 
@@ -316,7 +320,7 @@ class MediaInstructions{
                     },
                     "defaultFabricPrintInstructionIdentifier": {
                         "id": printInstructions.getId(),
-                        "externalId": printInstructions.getName(),
+                        "externalId": printInstructions.getExternalId(),
                         "identificationName": printInstructions.getName()
                     },
                     "defaultLoadingInstructionIdentifier": {
@@ -333,6 +337,7 @@ class MediaInstructions{
                     ]
                 }
             }
+            console.log(this.json)
         }
         catch (err){
             WriteToLog(err.message,logId,"error")

@@ -134,11 +134,11 @@ function writeTable() {
     });
 }
 
-export async function GetFabricPrintInstructionList() {
+export async function GetAllFabricPrintInstructions() {
     console.log("Getting Fabric Print Instructions");
 
     try {
-        const response = await fetch(localStorage.getItem("ServerURL") + "/api/v1/FabricPrintInstruction/GetFabricPrintInstructionList", {
+        const response = await fetch(localStorage.getItem("ServerURL") + "/api/v1/MediaInstructionsDb/GetAllFabricPrintInstructions", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ criteria: {} })
@@ -151,9 +151,9 @@ export async function GetFabricPrintInstructionList() {
         const data = await response.json();
 
         // Store "items" in localStorage
-        if (data.items) {
+        if (data.allFabricPrintInstructions) {
             console.log("Fabric Print Instructinos Loaded To Local")
-            localStorage.setItem("FabricPrintInstructionList", JSON.stringify(data.items));
+            localStorage.setItem("FabricPrintInstructionList", JSON.stringify(data.allFabricPrintInstructions));
         } else {
             console.warn("No 'items' key found in response.");
         }
@@ -164,4 +164,35 @@ export async function GetFabricPrintInstructionList() {
         console.error("Error fetching data:", error);
     }
 }
+
+// export async function GetFabricPrintInstructionList() {
+//     console.log("Getting Fabric Print Instructions");
+
+//     try {
+//         const response = await fetch(localStorage.getItem("ServerURL") + "/api/v1/FabricPrintInstruction/GetFabricPrintInstructionList", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ criteria: {} })
+//         });
+
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+
+//         const data = await response.json();
+
+//         // Store "items" in localStorage
+//         if (data.items) {
+//             console.log("Fabric Print Instructinos Loaded To Local")
+//             localStorage.setItem("FabricPrintInstructionList", JSON.stringify(data.items));
+//         } else {
+//             console.warn("No 'items' key found in response.");
+//         }
+
+//         return data.items; // Return the parsed data if needed
+
+//     } catch (error) {
+//         console.error("Error fetching data:", error);
+//     }
+// }
 
