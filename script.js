@@ -16,22 +16,29 @@ export async function uploadToDb(){
 async function addMediaToDB(mediaData){
     try{
         const media = new Media();
-        await media.create(mediaData)
-        await media.addToDB()
+        // await media.create(mediaData)
+        // await media.addToDB()
 
-        // if (await media.create(mediaData)){
-        //     const elStatus = document.querySelector(`.id-${mediaData["#"]}`)
-        //     const addedToDb = await media.addToDB()
-        //     elStatus.innerHTML = "●"
-        //     if(addedToDb){
-        //         elStatus.classList.add("pass")
-        //     }else{
-        //         elStatus.classList.add("fail")
-        //     }
-        // }
+        const elStatus = document.querySelector(`.id-${mediaData["#"]}`)
+        elStatus.innerHTML = "●"
+        elStatus.classList.add("inprogress")
+
+        if (await media.create(mediaData)){
+            if(await media.addToDB())
+            {
+                elStatus.classList.add("pass")
+                return true
+            }
+        }
+
+        elStatus.classList.add("fail")        
+        return false
     }
     catch (err) {
         console.log(`Unknown error adding ${mediaData.name}`, err)
+        const elStatus = document.querySelector(`.id-${mediaData["#"]}`)
+        elStatus.classList.add("fail")
+        return false
     }
 }
 

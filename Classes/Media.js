@@ -23,7 +23,6 @@ export class Media {
     async create(data){
         try 
         {
-
             logId = `${data["#"]}.${data["media name"]}`
             this.name = data["media name"]
             this.data = data;
@@ -43,6 +42,8 @@ export class Media {
             // WriteToLog(` │  └> Finished Generating ${data["media name"]}`);
             // return true
             WriteToLog(`   └> Media Created Succesfully`, logId);
+            return true
+
         } catch (error) {
             WriteToLog(`Unexpected error: ${error}`, logId,"error");
             return false
@@ -140,10 +141,12 @@ export class Media {
             WriteToLog(`    ├> Media Instructions Back Added Succesfully`, logId)
 
             WriteToLog(`    └> Media Added Successfully ${this.name}`, logId)
+            return true
         }
         catch (err){
             WriteToLog("Unexpected Error, check logs", logId,"error");
             console.log(err)
+            return false
         }
     }
 }
