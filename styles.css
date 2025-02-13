@@ -145,6 +145,11 @@ h2{
     color:rgb(248, 221, 221)
 }
 
+.log-detail.debug {
+    display: block;
+    background-color: rgb(72, 228, 255);
+}
+
 
 .table {
     border-collapse: collapse;

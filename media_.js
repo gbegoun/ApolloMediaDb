@@ -4,7 +4,7 @@ import { ids } from "./ids.js";
 let logId=""
 
 export class Media {
-    static getFabricPrintInstructionIdentifierByName = getFabricPrintInstructionIdentifierByName
+    // static getFabricPrintInstructionIdentifierByName = getFabricPrintInstructionIdentifierByName
     constructor() {
         
         this.initiated = false;
@@ -17,6 +17,7 @@ export class Media {
         this.loadingInstructionsBack = null;
         this.printInstructionBack = null;
         this.mediaInstructionsBack = null;
+        console.log("const")
     }
 
     async create(data){
@@ -443,18 +444,18 @@ class MediaInstructions extends Instruction {
 }
 
 
-function WriteToLog(message, level = null, id = null) {
+// function WriteToLog(message, level = null, id = null) {
 
-    // const newLine = document.createElement("div");
+//     // const newLine = document.createElement("div");
     
-    // newLine.classList.add("line");
+//     // newLine.classList.add("line");
 
-    // if (level) {
-    //     newLine.classList.add(level);
-    // }
-    // if (id) {
-    //     newLine.setAttribute("id", "id" + id); 
-    // }
-    // newLine.innerHTML = text;
-    window.dispatchEvent(new CustomEvent("externalData", {detail: {logId, message, level, id} }));
-}
+//     // if (level) {
+//     //     newLine.classList.add(level);
+//     // }
+//     // if (id) {
+//     //     newLine.setAttribute("id", "id" + id); 
+//     // }
+//     // newLine.innerHTML = text;
+//     window.dispatchEvent(new CustomEvent("externalData", {detail: {logId, message, level, id} }));
+// }

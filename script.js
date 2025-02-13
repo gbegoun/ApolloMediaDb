@@ -1,6 +1,6 @@
-import { Media } from "./media.js";
+// import { Media } from "./media.js";
 import { useLogger } from "./cmps/LoggerProvider.jsx"
-
+import { Media } from "./Classes/Media.js"
 
 
 export async function uploadToDb(){
@@ -16,16 +16,19 @@ export async function uploadToDb(){
 async function addMediaToDB(mediaData){
     try{
         const media = new Media();
-        if (await media.create(mediaData)){
-            const elStatus = document.querySelector(`.id-${mediaData["#"]}`)
-            const addedToDb = await media.addToDB()
-            elStatus.innerHTML = "●"
-            if(addedToDb){
-                elStatus.classList.add("pass")
-            }else{
-                elStatus.classList.add("fail")
-            }
-        }
+        await media.create(mediaData)
+        await media.addToDB()
+
+        // if (await media.create(mediaData)){
+        //     const elStatus = document.querySelector(`.id-${mediaData["#"]}`)
+        //     const addedToDb = await media.addToDB()
+        //     elStatus.innerHTML = "●"
+        //     if(addedToDb){
+        //         elStatus.classList.add("pass")
+        //     }else{
+        //         elStatus.classList.add("fail")
+        //     }
+        // }
     }
     catch (err) {
         console.log(`Unknown error adding ${mediaData.name}`, err)
@@ -90,7 +93,6 @@ export function readExcel(event) {
 }
 
 function writeTable() {
-    console.log("123")
     const jsonData = JSON.parse(localStorage.getItem("Medias"));
 
     let table = document.getElementById("excelTable");

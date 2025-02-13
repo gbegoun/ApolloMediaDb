@@ -18,14 +18,7 @@ export function App() {
     useEffect(() => {
         localStorage.setItem("ServerURL","http://bd-simulator09:55559")
         localStorage.removeItem("Medias")
-        localStorage.removeItem("FabricPrintInstructionList")
-
-        GetFabricPrintInstructionList()
-
-
-        GetFabricPrintInstructionList()
-
-        
+        localStorage.removeItem("FabricPrintInstructionList")    
 
         const fileInput = document.querySelector(".fileInput");
         const uploadButton  = document.getElementById("insert-button")

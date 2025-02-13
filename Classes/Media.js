@@ -1,226 +1,344 @@
 import { WriteToLog } from "./Utilities.js"
+import { ids } from "../ids.js";
+import {getFabricPrintInstructionsByName , sendRequest, getMediaBlankByName} from "../service.js";
+
+let logId
 
 export class Media {
     
-    static getFabricPrintInstructionIdentifierByName = getFabricPrintInstructionIdentifierByName
+    static getFabricPrintInstructionsByName  = getFabricPrintInstructionsByName 
     constructor() {
         
         this.mediaBlank = null;
 
         this.loadingInstructionsMain = null;
-        this.printInstructionMain = null;
+        this.printInstructionsMain = null;
         this.mediaInstructionsMain = null;
 
         this.loadingInstructionsBack = null;
-        this.printInstructionBack = null;
+        this.printInstructionsBack = null;
         this.mediaInstructionsBack = null;
     }
 
     async create(data){
-        try {
-            logId = data["media name"]
-            this.data = data;
-            WriteToLog(`[${data["#"]}] ${data["media name"]}`,"header",data["#"]);
-            WriteToLog(` │  Generating Media`);
-            
-            this.mediaBlank = this.generateMediaBlank();
-            this.loadingInstructionsMain = this.generateLoadingInstruction("main");
-            this.mediaInstructionsMain = this.generateMediaInstruction("main");
-            this.loadingInstructionsBack = this.generateLoadingInstruction("back");
-            this.mediaInstructionsBack = this.generateMediaInstruction("back");
-            await this.addPrintAreas();
-            WriteToLog(` │  └> Finished Generating ${data["media name"]}`);
-            return true
+        try 
+        {
 
+            logId = `${data["#"]}.${data["media name"]}`
+            this.name = data["media name"]
+            this.data = data;
+            WriteToLog(`Generating Media ${data["media name"]}`, logId);
+            
+            this.mediaBlank = new MediaBlank(data)
+            await this.addPrintAreas()
+            this.loadingInstructionsMain = new LoadingInstructions("main", data)
+            this.printInstructiosnMain = new PrintInstructions("main", data)
+            this.mediaInstructionsMain = new MediaInstructions("main", data, this.mediaBlank,this.loadingInstructionsMain, this.printInstructiosnMain)
+
+            this.loadingInstructionsBack = new LoadingInstructions("back", data)
+            this.printInstructiosnBack = new PrintInstructions("back", data)
+            this.mediaInstructionsBack = new MediaInstructions("back", data, this.mediaBlank,this.loadingInstructionsBack, this.printInstructiosnBack)
+
+            // await this.addPrintAreas();
+            // WriteToLog(` │  └> Finished Generating ${data["media name"]}`);
+            // return true
+            WriteToLog(`   └> Media Created Succesfully`, logId);
         } catch (error) {
-            WriteToLog(`Unexpected error: ${error}`);
+            WriteToLog(`Unexpected error: ${error}`, logId,"error");
             return false
         }
-    }
-
-    checkMedia() {
-        let legal = true;
-        if (this.mediaInstructionsMain && this.mediaInstructionsMain.pallet === "Not Supported") {
-            WriteToLog("Illegal Pallet");
-            legal = false;
-        }
-        return legal;
-    }
-    
-    generateMediaBlank() {
-        const name = this.data["media name"];
-        const sku = this.data["sku name"];
-        const mediaType = this.data["description - style"];
-        const color = this.data["color"] ? this.data["color"] : "Black";
-        const size = this.data["shirt size"];
-        return new MediaBlank(name, sku, mediaType, color, size);
-    }
-
-    generateLoadingInstruction(side) {
-        WriteToLog(" │  ├───> Generating Loading Instructions " + this.data[`loading instruction ${side}`]);
-        const name = this.data[`loading instruction ${side}`];
-        const stroke = this.data[`stroke ${side}`];
-        const span = this.data[`gripper span ${side}`];
-        const loadingSequence = this.data[`sequence logic ${side}`];
-        const tensionRelief = this.data[`tension relief ${side}`];
-
-        return new LoadingInstructions(name, span, stroke, loadingSequence, tensionRelief);
-    }
-
-    generateMediaInstruction(side) {
-
-        const name = this.data[`loading instruction ${side}`];
-
-        let printInstructionName = this.data[`print instruction ${side}`];
-        let printInstructionIdentifier = getFabricPrintInstructionIdentifierByName(printInstructionName)
-
-        if (printInstructionIdentifier == null) {
-            WriteToLog(` │  ├───> No print instruction ${printInstructionName} found`,"warning");
-            if (!this.data.color) {
-                printInstructionIdentifier = ids.deafultPrintInstructions.color.identifier;
-            } else if (this.data.color.toLowerCase() === "black") {
-                printInstructionIdentifier = ids.deafultPrintInstructions.dark.identifier;
-            } else if (this.data.color.toLowerCase() === "white") {
-                printInstructionIdentifier = ids.deafultPrintInstructions.light.identifier;
-            } else {
-                printInstructionIdentifier = ids.deafultPrintInstructions.color.identifier;
-            }
-            WriteToLog(` │  │      └> Setting to ${printInstructionIdentifier.identificationName}`,"warning");
-        }
-        const pallet = this.data[`pallet ${side}`].split(" ")[0];
-        WriteToLog(` │  ├───> Pallet: ${pallet}`)
-        return new MediaInstructions(
-            name,
-            this.mediaBlank,
-            pallet,
-            side === "main" ? this.loadingInstructionsMain : this.loadingInstructionsBack,
-            printInstructionIdentifier
-        );
     }
 
     async addPrintAreas() {
         try {
             let path = "standard";
             
-            if (
-                this.loadingInstructionsMain &&
-                this.loadingInstructionsMain.loadingSequence.toLowerCase() === "medium automatic surface"
-            ) {
+            if (String(this.data["Pallet Main"]).toLowerCase() ==="medium automatic surface") {
                 path = "medium";
             }
-            if (
-                this.loadingInstructionsMain &&
-                this.loadingInstructionsMain.loadingSequence.toLowerCase() === "small automatic surface"
-            ) {
+            if (String(this.data["Pallet Main"]).toLowerCase() ==="small automatic surface") {
                 path = "small";
             }
     
-            const response = await fetch(`./PrintAreas/${path}.json`);
+            const response = await fetch(`../PrintAreas/${path}.json`);
             if (!response.ok) {
-                throw new Error(`Failed to load ${path}.json: ${response.statusText}`);
+                console.error(`Failed to load ${path}.json: ${response.statusText}`);
             }
     
             const data = await response.json();
     
             if (this.mediaBlank) {
                 this.mediaBlank.printAreas = data;
-                WriteToLog(` │  ├───> Setting Print Area To ${path}`);
+                WriteToLog(`   │     └> Setting Print Area To ${path}`,logId);
             }
-        } catch (error) {
-            console.log("Error loading print areas:", error);
+        } catch (err) {
+            WriteToLog(err.message,logId,"error");
         }
     }
 
-    async addToDB() {
-        try {
-            // const media = getMediaBlankByName(this.mediaBlank.mediaName)
-            // if (media)
-            // {
-            //     console.log("************* media exists")
-            // }
+    async addToDB(){
+        WriteToLog(`Adding Media ${this.name} To Database`, logId);
+        try{
 
-            WriteToLog(` ├─┬─> Adding Media ${this.mediaBlank.mediaName} - SKU: ${this.mediaBlank.sku}`);
-    
-            if (!this.checkMedia()) {
+
+            WriteToLog(`    ├> Adding Media Blank`, logId);
+            let response = await this.mediaBlank.addToDB()
+            
+            if (response.status!=200)
+            {
+                const body = await response.json()
+                const errors = body.validationErrors
+                errors.forEach(error => {
+                    WriteToLog(`    │    ├> ${error}`, logId, "error")
+                })
+                WriteToLog(`    │    └> Failed To Add Media Blank`, logId, "error")
+                WriteToLog(`    └> Failed To Add Media  ${this.name}`, logId, "error")
+                return false   
+            }
+            WriteToLog(`    ├> Media Blank ${this.name} Added Succesfully`, logId)
+
+            WriteToLog(`    ├> Adding Loading Instructions Main`, logId);
+            response = await this.loadingInstructionsMain.addToDB()
+            if (response.status!=200)
+            {
+                const body = await response.json()
+                const keys = Object.keys(body.errors)
+                console.error("Error for ", logId)
+                console.error(body)
+                WriteToLog(`    └> Failed To Add Loading Instructions Main ${this.name}`, logId, "error")
                 return false
             }
+            WriteToLog(`    ├> Loading Instructions Main Added Succesfully`, logId)
 
-            let respsonse = await this.mediaBlank.addToDb();
-            let responseJson = await respsonse.json()
-
-            if (respsonse.status !== 200) {
-                WriteToLog(" │   ├> Failed to add media blank", "error");
-                WriteToLog(` │   └> ${responseJson.validationErrors.join(" / ")}`, "error");
-                WriteToLog(` └────> Failed To Add Media - ${this.mediaBlank.mediaName}\n`, "error");
+            WriteToLog(`    ├> Adding Media Instructions Main`, logId);
+            response = await this.mediaInstructionsMain.addToDB()
+            if (response.status!=200){
+                WriteToLog(`    └> Failed To Add Media Instructions Main ${this.name}`, logId, "error")        
                 return false
             }
-            WriteToLog(" │   └> Media Blank Added Succesfully")
+            WriteToLog(`    ├> Media Instructions Main Added Succesfully`, logId)
 
-            const data = {mediaBlanks:responseJson.mediaBlanks}
-            console.log(data)
-
-            respsonse = await this.mediaBlank.updatePrintAreas(data, this.mediaInstructionsMain.pallet);
-            if (respsonse.status !== 200) {
-                WriteToLog(" │   ├> Failed to update print area", "error");
-                responseJson = await respsonse.json()
-                WriteToLog(` │   └>${responseJson.validationErrors.join(" / ")}`, "error");
-                WriteToLog(` └────> Failed To Add Media - ${this.mediaBlank.mediaName}\n`, "error");
+            WriteToLog(`    ├> Adding Loading Instructions Back`, logId);
+            response = await this.loadingInstructionsBack.addToDB()
+            if (response.status!=200)
+            {
+                const body = await response.json()
+                const keys = Object.keys(body.errors)
+                console.error("Error for ", logId)
+                console.error(body)
+                WriteToLog(`    └> Failed To Add Loading Instructions Back ${this.name}`, logId, "error")
                 return false
             }
-            WriteToLog(" │   └> Print Area Updated Succesfully")
-    
-            respsonse = await this.loadingInstructionsMain.addToDb();
-            if (respsonse.status !== 200) {
-                WriteToLog(" │   ├> Failed to add loading instruction main", "error");
-                responseJson = await respsonse.json()
+            WriteToLog(`    ├> Loading Instructions Back Added Succesfully`, logId)
 
-                for (const key in responseJson.errors) {
-                    const errorMessages = responseJson.errors[key][0];
-                    WriteToLog(` │   └>${errorMessages}`, "error");
-                }
-                WriteToLog(` └────> Failed To Add Media - ${this.mediaBlank.mediaName}\n`, "error");
+            WriteToLog(`    ├> Adding Media Instructions Back`, logId);
+            response = await this.mediaInstructionsBack.addToDB()
+            if (response.status!=200){
+                WriteToLog(`    └> Failed To Add Media Instructions Back ${this.name}`, logId, "error")        
                 return false
             }
-            WriteToLog(` │   └> Loading Instructions Main Added Succesfully - ${this.loadingInstructionsMain.guid}`);
-    
-            respsonse = await this.mediaInstructionsMain.addToDb();
-            if (respsonse.status !== 200) {
-                WriteToLog(" │    Failed to add main media instructions", "error");
-                WriteToLog(` └────> Failed To Add Media - ${this.mediaBlank.mediaName}\n`, "error");
-                return false
-            }
-            WriteToLog(` │   └> Media Instructions Main Added Succesfully - ${this.mediaInstructionsMain.guid}`);
-    
-            respsonse = await this.loadingInstructionsBack.addToDb();
-            if (respsonse.status !== 200) {
-                WriteToLog(" │   └> Failed To Add Loading Instruction Back", "error");
-                responseJson = await respsonse.json()
+            WriteToLog(`    ├> Media Instructions Back Added Succesfully`, logId)
 
-                for (const key in responseJson.errors) {
-                    const errorMessages = responseJson.errors[key][0];
-                    WriteToLog(` │     └>${errorMessages}`, "error");
-                }
-                WriteToLog(` └────> Failed To Add Media - ${this.mediaBlank.mediaName}\n`, "error");
-                return false
-            }
-            WriteToLog(` │   └> Loading Instructions Back Added Succesfully - ${this.loadingInstructionsBack.guid}`);
-
-            respsonse = await this.mediaInstructionsBack.addToDb();
-            if (respsonse.status !== 200) {
-                WriteToLog(" │   └> Failed to add Back media instructions", "error");
-                WriteToLog(` └────> Failed To Add Media - ${this.mediaBlank.mediaName}\n`, "error");
-                return false
-            }
-            WriteToLog(` │   └> Media Instructions Back Added Succesfully - ${this.mediaInstructionsBack.guid}`);
-
-            WriteToLog(` └────> Finishing Adding Media - ${this.mediaBlank.mediaName}`,"success");
-            return true;
-
-        } catch (error) {
-            WriteToLog(`Unexpected error: ${error}`);
-            return false
+            WriteToLog(`    └> Media Added Successfully ${this.name}`, logId)
         }
-        
+        catch (err){
+            WriteToLog("Unexpected Error, check logs", logId,"error");
+            console.log(err)
+        }
     }
 }
 
+class MediaBlank{
+    json = {}
+    api_url_add = "/api/v1/MediaDb/AddExternalMedias";
+    api_url_update = "/api/v1/MediaDb/UpdateExternalMedias";
+
+    constructor (data){
+        WriteToLog(`   ├> Generating Media Blank - ${data["media name"]}`, logId);
+        try{
+            this.json = {mediaBlanks: [{
+                name: data["media name"],
+                identifier: {
+                    id: crypto.randomUUID(),
+                    
+                    identificationName: data["media name"],
+                    sku: data["sku name"]
+                },
+                mediaProportion: {
+                    identifier: {
+                        identificationName: data["shirt size"]
+                    },
+                    name: ids.sizeName[data["shirt size"]]
+                },
+                defaultFabric: {
+                    colorInfo: {
+                        identifier: {
+                            identificationName: data["color"] ? data["color"] : "Black"
+                        }
+                    }
+                },
+                mediaType: {
+                    mediaTypeIdentifier: {
+                        identificationName: data["description - style"]
+                    }
+                }
+            }]}
+            
+        }
+        catch (err){
+            WriteToLog(`   └> ${err.message,logId}`,"error")
+        }
+        
+    }
+
+    getId() {
+        return this.json.mediaBlanks[0].identifier.id;
+    }
+
+    async addToDB()
+    {
+        const response = await(sendRequest(this.json,this.api_url_add))   
+        return response
+    }
+
+
+}
+
+class LoadingInstructions{
+    api_url_add = "/api/v1/MediaInstructionsDb/AddLoadingInstructions"
+
+    constructor (side, data){
+        WriteToLog(`   ├> Generating Loading Instruction ${side} - ${data["media name"]} ${side}`, logId);
+        try{
+            this.json = {
+                "loadingInstructions": {
+                    "id": 0,
+                    "identifier": {
+                        "id": crypto.randomUUID(),
+                        "identificationName": data[`loading instruction ${side}`]
+                    },
+                    "name":data[`loading instruction ${side}`],
+                    "originLoadingInstructionsIdentifier": null,
+                    "useLintRoller": true,
+                    "span": data[`gripper span ${side}`],
+                    "stroke":  isFinite(data[`stroke ${side}`]) ? data[`stroke ${side}`] : 801,
+                    "autoLoaderEnabled": isFinite(data[`stroke ${side}`]),
+                    "continuousEnabled": false,
+                    "loadingInstructionsProperties": {},
+                    "isFactoryCreated": false,
+                    "loadingSequence": {
+                        "identifier": {
+                            "id": ids.loadingSequence[data[`sequence logic ${side}`]],
+                            "identificationName": data[`sequence logic ${side}`]
+                        },
+                        "id": 1
+                    },
+                    "tensionRelief": {
+                        "id": 1,
+                        "identifier": {
+                            "id": ids.tensionRelief[data[`tension relief ${side}`]],
+                            "identificationName": data[`tension relief ${side}`]
+                        },
+                        "dateModified": null
+                    }
+                }
+            }
+        }
+        catch (err){
+            WriteToLog(`   └> ${err.message,logId}`,"error")
+        }
+    }
+
+    getId() {
+        return this.json.loadingInstructions.identifier.id;
+    }
+
+    async addToDB()
+    {
+        const response = await(sendRequest(this.json,this.api_url_add))   
+        return response
+    }
+}
+
+class PrintInstructions {
+    constructor(side, data) {
+        try {
+            const name = data[`print instruction ${side}`]        
+            WriteToLog(`   ├> Setting print instruction ${side} - ${name}`, logId)
+            this.json = getFabricPrintInstructionsByName(name)
+    
+            if(this.json==null){    
+                const mediaColor = data.color.toLowerCase()
+                if (!mediaColor || mediaColor==="black" || mediaColor==="") {
+                    this.json = getFabricPrintInstructionsByName("Apollo Dark STD")
+                } else if (mediaColor==="white") {
+                    this.json = getFabricPrintInstructionsByName("Apollo Light STD")
+                } else {
+                    this.json = getFabricPrintInstructionsByName("Apollo Color STD")
+                }
+                WriteToLog(`   │      └> Print Instructions ${name} not found, setting to ${this.json.identifier.identificationName}`, logId, "warning")
+            } else {
+                WriteToLog(`   │      └ Print Instructions ${name} found`, logId)
+            }
+        } 
+        catch (err) {
+            WriteToLog(`   └> ${err.message,logId}`,"error")
+        }
+    }
+
+    getId(){
+        return this.json.identifier.id
+    }
+
+    getName(){
+        return this.json.identifier.identificationName
+    }
+}
+
+class MediaInstructions{
+    api_url_add = "/api/v1/MediaInstructionsDb/AddSlimMediaInstructions";
+    constructor (side, data, mediaBlank, loadingInstructions, printInstructions){
+        WriteToLog(`   ├> Populating Media Instruction ${data["media name"]} ${side}`, logId);
+        try{
+
+            const pallet = data[`pallet ${side}`].split(" ")[0]
+            this.json = {
+                "mediaPrintInstructions": {
+                    "mediaPrintInstructionsIdentifier": {
+                        "id": crypto.randomUUID(),
+                        "identificationName": data[`loading instruction ${side}`]
+                    },
+                    "mediaBlankIdentifier": {
+                        "id": mediaBlank.getId()
+                    },
+                    "defaultFabricPrintInstructionIdentifier": {
+                        "id": printInstructions.getId(),
+                        "externalId": printInstructions.getName(),
+                        "identificationName": printInstructions.getName()
+                    },
+                    "defaultLoadingInstructionIdentifier": {
+                        "id": loadingInstructions.getId()
+                    },
+                    "instructionsPerPrintAreas": [],
+                    "supportedSurfacesTypes": [
+                        {
+                            "surfaceTypeIdentifier": {
+                                "id": ids.surface[pallet]
+                            },
+                            "surfaceLayoutName": pallet
+                        }
+                    ]
+                }
+            }
+        }
+        catch (err){
+            WriteToLog(err.message,logId,"error")
+        }
+    }
+
+    async addToDB()
+    {
+        const response = await(sendRequest(this.json,this.api_url_add))   
+        return response
+    }
+}

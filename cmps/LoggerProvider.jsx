@@ -26,8 +26,6 @@ export function LoggerProvider({ children }) {
 
     useEffect(() => {
         if (data.length > 0) {
-            console.log("Processing logs:", data); // Debugging: Check if all logs are received
-
             // Process ALL logs instead of just the latest one
             data.forEach(log => {
                 addLogLine(log.logId, log.message, log.level, log.id);

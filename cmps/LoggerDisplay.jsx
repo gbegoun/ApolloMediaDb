@@ -9,8 +9,9 @@ export function LoggerDisplay() {
 
     const addLogBox = (logId) => 
     {
-        setLogIds= setLogIds([...logIds,logId])
+        setLogIds = setLogIds([...logIds,logId])
     }
+
     return (
         <div className="log-container">
             {Object.keys(logs).map((logId) => (

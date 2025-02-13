@@ -17,8 +17,7 @@ export function LogBox({ logId }) {
     return (
         <div className = {`log-box ${isOpen ? "open" : ""} `} >
             <div className = "log-title" onClick={toggleLog}>{logId}</div>
-                {logLines.map((line, index) => (
-                    
+                {logLines.map((line, index) => (              
                     <div className = {`log-detail line ${line.level}`} key={index}>{line.message}</div>
                 ))}
         </div>

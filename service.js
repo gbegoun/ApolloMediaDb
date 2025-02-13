@@ -1,8 +1,8 @@
 
-export function getFabricPrintInstructionIdentifierByName(name){
+export function getFabricPrintInstructionsByName(name){
     const fabricPrintInstructions = getPrintInstructions()
     const instruction = fabricPrintInstructions.find(instr => instr.identifier.identificationName === name);
-    return instruction && instruction.instruction ? instruction.instruction.identifier : null;
+    return instruction || null;
 
 }
 
@@ -20,7 +20,7 @@ export async function sendRequest(data, endpoint) {
         return response; 
 
     } catch (error) {
-        return response; 
+        return error; 
     }
 }
 
