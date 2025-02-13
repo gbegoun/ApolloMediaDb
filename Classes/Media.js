@@ -189,7 +189,7 @@ class MediaBlank{
             
         }
         catch (err){
-            WriteToLog(`   └> ${err.message,logId}`,"error")
+            WriteToLog(`   └> ${err.message,logId}`,logId , "error")
         }
         
     }

@@ -16,8 +16,6 @@ export async function uploadToDb(){
 async function addMediaToDB(mediaData){
     try{
         const media = new Media();
-        // await media.create(mediaData)
-        // await media.addToDB()
 
         const elStatus = document.querySelector(`.id-${mediaData["#"]}`)
         elStatus.innerHTML = "●"
