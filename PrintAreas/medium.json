@@ -1,15 +1,65 @@
-{  "printAreas" : [ 
+{
+    "printAreas": [
         {
-            "Identifier" : {
-                "_id" : "1a113adc-28e8-429f-8654-a89a758db2eb",
-                "IdentificationName" : null,
-                "ExternalId" : null
+            "identifier": {
+                "externalId": null,
+                "id": "1a113adc-28e8-429f-8654-a89a758db2eb",
+                "identificationName": null
             },
-            "Name" : "MainPrintArea",
-            "Fabric" : {
-                "_id" : "fde3ba60-872f-435c-9a40-fb5d93cd2538",
-                "IdentificationName" : null,
-                "ExternalId" : null
+            "name": "MainPrintArea",
+            "fabric": {
+                "id": 270,
+                "name": null,
+                "identifier": {
+                    "externalId": null,
+                    "id": "8ddc985d-3976-4a07-8471-37ad4d9de5e6",
+                    "identificationName": null
+                },
+                "thickness": 1,
+                "density": 0,
+                "isFiber": false,
+                "isCoating": false,
+                "knitFabric": false,
+                "material": null,
+                "colorInfo": {
+                    "identifier": {
+                        "id": "f3a59fed-77bd-4609-bd1f-1580fd196128",
+                        "identificationName": "White"
+                    },
+                    "color": null,
+                    "colorModel": {
+                        "rgb": {
+                            "a": 255,
+                            "r": 255,
+                            "g": 255,
+                            "b": 255
+                        },
+                        "hex": null,
+                        "cmyk": null,
+                        "pms": null
+                    },
+                    "localizedName": null,
+                    "localizedKey": null,
+                    "mediaDarkness": 0,
+                    "pms": null,
+                    "isFactoryCreated": true
+                },
+                "manufacturer": null,
+                "materialContent": [
+                    {
+                        "material": {
+                            "identifier": {
+                                "id": "cd56456f-c2e7-4a22-9321-e21271204948",
+                                "identificationName": "Cotton"
+                            },
+                            "localizedKey": "",
+                            "localizedName": null,
+                            "isFactoryCreated": true
+                        },
+                        "content": 100
+                    }
+                ],
+                "isFactoryCreated": false
             },
             "Size" : {
                 "Width" : 330.2,
@@ -20,76 +70,180 @@
                 "Scan" : 15.0,
                 "CrossScan" : 165.1
             },
-            "PrintAreaSide" : 0,
-            "PrintAreaGroupLeader" : {
-                "_id" : "1a113adc-28e8-429f-8654-a89a758db2eb",
-                "IdentificationName" : null,
-                "ExternalId" : null
+            "printAreaSide": 0,
+            "printAreaGroupLeader": {
+                "externalId": null,
+                "id": "1a113adc-28e8-429f-8654-a89a758db2eb",
+                "identificationName": null
             },
-            "Tags" : []
-        }, 
+            "tags": [
+            ]
+        },
         {
-            "Identifier" : {
-                "_id" : "dd538e0c-9235-4941-ab92-472ad0238a3f",
-                "IdentificationName" : null,
-                "ExternalId" : null
+            "identifier": {
+                "externalId": null,
+                "id": "dd538e0c-9235-4941-ab92-472ad0238a3f",
+                "identificationName": null
             },
-            "Name" : "TagPrintArea",
-            "Fabric" : {
-                "_id" : "fde3ba60-872f-435c-9a40-fb5d93cd2538",
-                "IdentificationName" : null,
-                "ExternalId" : null
+            "name": "TagPrintArea",
+            "fabric": {
+                "id": 270,
+                "name": null,
+                "identifier": {
+                    "externalId": null,
+                    "id": "8ddc985d-3976-4a07-8471-37ad4d9de5e6",
+                    "identificationName": null
+                },
+                "thickness": 1,
+                "density": 0,
+                "isFiber": false,
+                "isCoating": false,
+                "knitFabric": false,
+                "material": null,
+                "colorInfo": {
+                    "identifier": {
+                        "id": "f3a59fed-77bd-4609-bd1f-1580fd196128",
+                        "identificationName": "White"
+                    },
+                    "color": null,
+                    "colorModel": {
+                        "rgb": {
+                            "a": 255,
+                            "r": 255,
+                            "g": 255,
+                            "b": 255
+                        },
+                        "hex": null,
+                        "cmyk": null,
+                        "pms": null
+                    },
+                    "localizedName": null,
+                    "localizedKey": null,
+                    "mediaDarkness": 0,
+                    "pms": null,
+                    "isFactoryCreated": true
+                },
+                "manufacturer": null,
+                "materialContent": [
+                    {
+                        "material": {
+                            "identifier": {
+                                "id": "cd56456f-c2e7-4a22-9321-e21271204948",
+                                "identificationName": "Cotton"
+                            },
+                            "localizedKey": "",
+                            "localizedName": null,
+                            "isFactoryCreated": true
+                        },
+                        "content": 100
+                    }
+                ],
+                "isFactoryCreated": false
             },
-            "Size" : {
-                "Width" : 71.0,
-                "Height" : 71.0
+            "size": {
+                "width": 63.5,
+                "height": 63.5
             },
-            "Angle" : 0,
-            "OffsetPoint" : {
-                "Scan" : -5.0,
-                "CrossScan" : 35.0
+            "angle": 0,
+            "offsetPoint": {
+                "scan": -17.5,
+                "crossScan": 32
             },
-            "PrintAreaSide" : 0,
-            "PrintAreaGroupLeader" : {
-                "_id" : "1a113adc-28e8-429f-8654-a89a758db2eb",
-                "IdentificationName" : null,
-                "ExternalId" : null
+            "printAreaSide": 0,
+            "printAreaGroupLeader": {
+                "externalId": null,
+                "id": "1a113adc-28e8-429f-8654-a89a758db2eb",
+                "identificationName": null
             },
-            "Tags" : [ 
+            "tags": [
                 {
-                    "_id" : "94b6505a-2af4-40d5-90dd-d67b206df31d",
-                    "IdentificationName" : "Neck Tag"
+                    "id": 0,
+                    "identifier": {
+                        "id": "94b6505a-2af4-40d5-90dd-d67b206df31d",
+                        "identificationName": "Neck Tag"
+                    },
+                    "category": "Print Area"
                 }
             ]
-        }, 
+        },
         {
-            "Identifier" : {
-                "_id" : "afa948aa-7ad6-4671-8d25-10473372bdaa",
-                "IdentificationName" : null,
-                "ExternalId" : null
+            "identifier": {
+                "externalId": null,
+                "id": "afa948aa-7ad6-4671-8d25-10473372bdaa",
+                "identificationName": null
             },
-            "Name" : "BackPrintArea",
-            "Fabric" : {
-                "_id" : "fde3ba60-872f-435c-9a40-fb5d93cd2538",
-                "IdentificationName" : null,
-                "ExternalId" : null
+            "name": "BackPrintArea",
+            "fabric": {
+                "id": 270,
+                "name": null,
+                "identifier": {
+                    "externalId": null,
+                    "id": "8ddc985d-3976-4a07-8471-37ad4d9de5e6",
+                    "identificationName": null
+                },
+                "thickness": 1,
+                "density": 0,
+                "isFiber": false,
+                "isCoating": false,
+                "knitFabric": false,
+                "material": null,
+                "colorInfo": {
+                    "identifier": {
+                        "id": "f3a59fed-77bd-4609-bd1f-1580fd196128",
+                        "identificationName": "White"
+                    },
+                    "color": null,
+                    "colorModel": {
+                        "rgb": {
+                            "a": 255,
+                            "r": 255,
+                            "g": 255,
+                            "b": 255
+                        },
+                        "hex": null,
+                        "cmyk": null,
+                        "pms": null
+                    },
+                    "localizedName": null,
+                    "localizedKey": null,
+                    "mediaDarkness": 0,
+                    "pms": null,
+                    "isFactoryCreated": true
+                },
+                "manufacturer": null,
+                "materialContent": [
+                    {
+                        "material": {
+                            "identifier": {
+                                "id": "cd56456f-c2e7-4a22-9321-e21271204948",
+                                "identificationName": "Cotton"
+                            },
+                            "localizedKey": "",
+                            "localizedName": null,
+                            "isFactoryCreated": true
+                        },
+                        "content": 100
+                    }
+                ],
+                "isFactoryCreated": false
             },
             "Size" : {
-                "Width" : 396.24,
+                "Width" : 330.2,
                 "Height" : 427.8
             },
             "Angle" : 0,
             "OffsetPoint" : {
                 "Scan" : 15.0,
-                "CrossScan" : 198.12
+                "CrossScan" : 165.1
             },
-            "PrintAreaSide" : 1,
-            "PrintAreaGroupLeader" : {
-                "_id" : "afa948aa-7ad6-4671-8d25-10473372bdaa",
-                "IdentificationName" : null,
-                "ExternalId" : null
+            "printAreaSide": 1,
+            "printAreaGroupLeader": {
+                "externalId": null,
+                "id": "afa948aa-7ad6-4671-8d25-10473372bdaa",
+                "identificationName": null
             },
-            "Tags" : []
+            "tags": [
+            ]
         }
-    ],
-  }
+    ]
+}

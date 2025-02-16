@@ -25,7 +25,7 @@ export class Media {
         {
             logId = `${data["#"]}.${data["media name"]}`
             this.name = data["media name"]
-            this.data = data;
+            this.data = data;        
             WriteToLog(`Generating Media ${data["media name"]}`, logId);
             
             this.mediaBlank = new MediaBlank(data)
@@ -37,10 +37,7 @@ export class Media {
             this.loadingInstructionsBack = new LoadingInstructions("back", data)
             this.printInstructiosnBack = new PrintInstructions("back", data)
             this.mediaInstructionsBack = new MediaInstructions("back", data, this.mediaBlank,this.loadingInstructionsBack, this.printInstructiosnBack)
-
-            // await this.addPrintAreas();
-            // WriteToLog(` │  └> Finished Generating ${data["media name"]}`);
-            // return true
+            
             WriteToLog(`   └> Media Created Succesfully`, logId);
             return true
 
@@ -51,13 +48,13 @@ export class Media {
     }
 
     async addPrintAreas() {
-        try {
+            try {
             let path = "standard";
             
-            if (String(this.data["Pallet Main"]).toLowerCase() ==="medium automatic surface") {
+            if (String(this.data["pallet main"]).toLowerCase() ==="medium automatic surface") {
                 path = "medium";
             }
-            if (String(this.data["Pallet Main"]).toLowerCase() ==="small automatic surface") {
+            if (String(this.data["pallet main"]).toLowerCase() ==="small automatic surface") {
                 path = "small";
             }
     
@@ -65,15 +62,14 @@ export class Media {
             if (!response.ok) {
                 console.error(`Failed to load ${path}.json: ${response.statusText}`);
             }
-    
             const data = await response.json();
-    
             if (this.mediaBlank) {
-                this.mediaBlank.printAreas = data;
+                this.mediaBlank.json.mediaBlanks[0].printAreas = data.printAreas;
                 WriteToLog(`   │     └> Setting Print Area To ${path}`,logId);
             }
         } catch (err) {
             WriteToLog(err.message,logId,"error");
+            console.error(err.message)
         }
     }
 
@@ -174,11 +170,29 @@ class MediaBlank{
                     name: ids.sizeName[data["shirt size"]]
                 },
                 defaultFabric: {
+                    "thickness": 1,
                     colorInfo: {
                         identifier: {
                             identificationName: data["color"] ? data["color"] : "Black"
                         }
+                    },
+                    "materialContent": [
+                    {
+                        "material": {
+                            "identifier": {
+                                "identificationName": "Cotton"
+                            },
+                            "localizedKey": "",
+                            "localizedName": null,
+                            "isFactoryCreated": true
+                        },
+                        "content": 100
                     }
+                ],
+                },
+                "mediaSize": {
+                    "width": 480,
+                    "length": 810
                 },
                 mediaType: {
                     mediaTypeIdentifier: {
@@ -200,12 +214,67 @@ class MediaBlank{
 
     async addToDB()
     {
+        console.debug(this.json)
         const response = await(sendRequest(this.json,this.api_url_add))   
         return response
-    }
-
-
+    }
 }
+
+// class MediaBlank{
+//     json = {}
+//     api_url_add = "/api/v1/MediaDb/AddExternalMedias";
+//     api_url_update = "/api/v1/MediaDb/UpdateExternalMedias";
+
+//     constructor (data){
+//         WriteToLog(`   ├> Generating Media Blank - ${data["media name"]}`, logId);
+//         try{
+//             this.json = {mediaBlanks: [{
+//                 name: data["media name"],
+//                 identifier: {
+//                     id: crypto.randomUUID(),
+                    
+//                     identificationName: data["media name"],
+//                     sku: data["sku name"]
+//                 },
+//                 mediaProportion: {
+//                     identifier: {
+//                         identificationName: data["shirt size"]
+//                     },
+//                     name: ids.sizeName[data["shirt size"]]
+//                 },
+//                 defaultFabric: {
+//                     colorInfo: {
+//                         identifier: {
+//                             identificationName: data["color"] ? data["color"] : "Black"
+//                         }
+//                     }
+//                 },
+//                 mediaType: {
+//                     mediaTypeIdentifier: {
+//                         identificationName: data["description - style"]
+//                     }
+//                 }
+//             }]}
+            
+//         }
+//         catch (err){
+//             WriteToLog(`   └> ${err.message,logId}`,logId , "error")
+//         }
+        
+//     }
+
+//     getId() {
+//         return this.json.mediaBlanks[0].identifier.id;
+//     }
+
+//     async addToDB()
+//     {
+//         const response = await(sendRequest(this.json,this.api_url_add))   
+//         return response
+//     }
+
+
+// }
 
 class LoadingInstructions{
     api_url_add = "/api/v1/MediaInstructionsDb/AddLoadingInstructions"
@@ -337,7 +406,6 @@ class MediaInstructions{
                     ]
                 }
             }
-            console.log(this.json)
         }
         catch (err){
             WriteToLog(err.message,logId,"error")
