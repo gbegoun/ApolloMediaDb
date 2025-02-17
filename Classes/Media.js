@@ -152,7 +152,7 @@ export class Media {
 class MediaBlank{
     json = {}
     api_url_add = "/api/v1/MediaDb/AddExternalMedias";
-    api_url_update = "/api/v1/MediaDb/UpdateExternalMedias";
+    api_url_update = "/api/v1/MediaDb/UpdateMedia";
 
     constructor (data){
         WriteToLog(`   ├> Generating Media Blank - ${data["media name"]}`, logId);
