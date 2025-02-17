@@ -50,12 +50,14 @@ export class Media {
     async addPrintAreas() {
             try {
             let path = "standard";
-            
+            this.mediaBlank.printAreaSize = "Standard"
             if (String(this.data["pallet main"]).toLowerCase() ==="medium automatic surface") {
                 path = "medium";
+                this.mediaBlank.printAreaSize = "Medium"
             }
             if (String(this.data["pallet main"]).toLowerCase() ==="small automatic surface") {
                 path = "small";
+                this.mediaBlank.printAreaSize = "Small"
             }
     
             const response = await fetch(`../PrintAreas/${path}.json`);
@@ -214,10 +216,23 @@ class MediaBlank{
 
     async addToDB()
     {
-        console.debug(this.json)
         const response = await(sendRequest(this.json,this.api_url_add))   
-        return response
+        const data = await response.json();
+        const mediaBlankToUpdate = await this.updatePrintArea(data)
+        const response2 = await(sendRequest(mediaBlankToUpdate,this.api_url_update))   
+        return response2
     }
+
+    async updatePrintArea(data){
+
+        data.mediaBlanks[0].printAreas[0].size = ids.palletSize[this.printAreaSize].Size
+        data.mediaBlanks[0].printAreas[0].offsetPoint = ids.palletSize[this.printAreaSize].OffsetPoint
+        data.mediaBlanks[0].printAreas[2].size = ids.palletSize[this.printAreaSize].Size
+        data.mediaBlanks[0].printAreas[2].offsetPoint = ids.palletSize[this.printAreaSize].OffsetPoint
+        delete data.validationErrors;
+        const mediaBlankToUpdate = {mediaBlank: data.mediaBlanks[0]}
+        return mediaBlankToUpdate
+    }
 }
 
 // class MediaBlank{
