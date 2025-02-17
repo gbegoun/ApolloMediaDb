@@ -1,5 +1,5 @@
 
-const { useEffect, useState } = React
+const { useEffect } = React
 
 import { LoggerProvider } from "./cmps/LoggerProvider.jsx";
 import { LoggerDisplay } from "./cmps/LoggerDisplay.jsx";
@@ -19,7 +19,7 @@ export function App() {
     useEffect(() => {
         localStorage.setItem("ServerURL",server_address + ":55559")
         localStorage.removeItem("Medias")
-        localStorage.removeItem("FabricPrintInstructionList")            
+        localStorage.removeItem("FabricPrintInstructionList")
         const fileInput = document.querySelector(".fileInput");
         const uploadButton  = document.getElementById("insert-button")
         if (fileInput) {

@@ -1,5 +1,3 @@
-// import { Media } from "./media.js";
-import { useLogger } from "./cmps/LoggerProvider.jsx"
 import { Media } from "./Classes/Media.js"
 
 
@@ -136,6 +134,7 @@ function writeTable() {
 
 export async function GetAllFabricPrintInstructions() {
     console.log("Getting Fabric Print Instructions");
+    
 
     try {
         const response = await fetch(localStorage.getItem("ServerURL") + "/api/v1/MediaInstructionsDb/GetAllFabricPrintInstructions", {
@@ -152,7 +151,7 @@ export async function GetAllFabricPrintInstructions() {
 
         // Store "items" in localStorage
         if (data.allFabricPrintInstructions) {
-            console.log("Fabric Print Instructinos Loaded To Local")
+            console.log("Fabric Print Instructions Loaded To Local")
             localStorage.setItem("FabricPrintInstructionList", JSON.stringify(data.allFabricPrintInstructions));
         } else {
             console.warn("No 'items' key found in response.");
