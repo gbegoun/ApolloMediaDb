@@ -9,7 +9,7 @@ import {readExcel, uploadToDb, GetAllFabricPrintInstructions } from "./script.js
 import {getMediaBlanks} from "./service.js"
 
 export function App() {
-    const server_address = "http://bd-simulator09"
+    const server_address = "http://127.0.0.1/"
 
     const fileInput = document.querySelector(".fileInput");
     GetAllFabricPrintInstructions()
